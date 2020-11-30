@@ -11,11 +11,14 @@ from scipy.io.wavfile import write
 # Create simple signal with several frequencies and add noise:
     
 dt = 0.0001 # sample frequence: 1000Hz >> max signal frequence <= 500 Hz
-t = np.arange(0,1, dt) 
-f = 1 * np.cos(1 * np.pi * 10 * t ) + 2 * np.sin(2 * np.pi * 20 * t ) + \
-    1.5 * np.sin(2 * np.pi * 40 * t )  + 5 * np.sin(2 * np.pi * 50 * t ) + \
-    2.1 * np.cos (2 * np.pi * 80 * t ) + 2.3 * np.cos(2 * np.pi * 120 * t ) + \
-    5 * np.sin(2 * np.pi * 150 * t ) + 5 * np.sin(2 * np.pi * 180 * t )
+t = np.arange(0,5, dt) 
+#f = 1 * np.sin(2 * np.pi * 10 * t ) + 2 * np.sin(2 * np.pi * 20 * t )
+f = 1 * np.cos(2 * np.pi * 10 * t ) + 2 * np.sin(2 * np.pi * 20 * t ) + \
+    1.5 * np.sin(2 * np.pi * 40 * t )  + 5 * np.cos(2 * np.pi * 50 * t ) + \
+    1.5 * np.sin(2 * np.pi * 70 * t )  + 1 * np.sin(2 * np.pi * 80 * t ) + \
+    2.1 * np.cos (2 * np.pi * 100 * t ) + 2.5 * np.sin(2 * np.pi * 120 * t ) + \
+    5 * np.cos(2 * np.pi * 150 * t ) + 5 * np.sin(2 * np.pi * 180 * t )
+
 
 f_clean = f
 f = f + 5 * np.random.randn(len(t))
@@ -54,7 +57,7 @@ print("Standar deviation of PSD without outliers: " + str(stdDevPSD) )
 
 
 # calculate threshold using mean and std dev:
-thresMax = avgPSD + max_deviations * stdDevPSD
+thresMax = avgPSD + 10 * (max_deviations * stdDevPSD)
 #thresMin = avgPSD - max_deviations * stdDevPSD
 
 print("PSD Upper threshold (mean + " + str(max_deviations) + " std dev): " + str(thresMax))
@@ -66,7 +69,8 @@ print("PSD Upper threshold (mean + " + str(max_deviations) + " std dev): " + str
 indices = PSD > thresMax
 PSDClean = PSD * indices
 fhat = indices * fhat
-ffilt = np.fft.ifft (fhat)
+f_filt = np.fft.ifft (fhat)
+
 
 #####################################################
 # Plots:
@@ -79,7 +83,8 @@ fig,axs = plt.subplots(3,1)
 plt.sca(axs[0])
 plt.plot(t, f, color = 'c', LineWidth = 1.5, label='Noisy')
 plt.plot(t, f_clean, color = 'k', LineWidth = 3, label='Clean')
-#plt.xlim(0, 0.3)#plt.xlim(t[0], t[-1])
+plt.xlim(0, 0.15)#plt.xlim(t[0], t[-1])
+#plt.ylim(-30, 30)
 plt.legend()
 
 plt.sca(axs[1])
@@ -92,8 +97,10 @@ plt.yscale('log')
 plt.legend()
 
 plt.sca(axs[2])
-plt.plot(t, ffilt, color = 'g', LineWidth = 1.5, label='Filtered')
-#plt.xlim(0, 0.3)#plt.xlim(t[0], t[-1])
+plt.plot(t, f_clean, color = 'k', LineWidth = 3, label='Clean')
+plt.plot(t, (f_filt-5), color = 'g', LineWidth = 1.5, label='Filtered')
+plt.xlim(0, 0.15)#plt.xlim(t[0], t[-1])
+#plt.ylim(-30, 30)
 plt.legend()
 
 plt.show()
@@ -102,11 +109,11 @@ plt.show()
 #Converto to sound:
     
 scaledC = np.int16(f_clean /np.max(np.abs(f_clean)) * 32767)
-write('C:\\temp\\f_clean.wav', 44100, scaledC)
-scaledF = np.int16(ffilt/np.max(np.abs(ffilt)) * 32767)
-write('C:\\temp\\f_filt.wav', 44100, scaledF)
+write('C:\\temp\\fft\\f_clean.wav', 44100, scaledC)
+scaledF = np.int16(f_filt/np.max(np.abs(f_filt)) * 32767)
+write('C:\\temp\\fft\\f_filt.wav', 44100, scaledF)
 scaledD = np.int16(f/np.max(np.abs(f)) * 32767)
-write('C:\\temp\\f_dirty.wav', 44100, scaledD)
+write('C:\\temp\\fft\\f_dirty.wav', 44100, scaledD)
 
 #write('C:\\temp\\f_clean.wav', 44100, f_clean)
 #write('C:\\temp\\f_filt.wav', 44100, ffilt)
