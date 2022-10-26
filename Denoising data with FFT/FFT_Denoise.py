@@ -13,11 +13,16 @@ from scipy.io.wavfile import write
 dt = 0.0001 # sample frequence: 1000Hz >> max signal frequence <= 500 Hz
 t = np.arange(0,5, dt) 
 #f = 1 * np.sin(2 * np.pi * 10 * t ) + 2 * np.sin(2 * np.pi * 20 * t )
-f = 1 * np.cos(2 * np.pi * 10 * t ) + 2 * np.sin(2 * np.pi * 20 * t ) + \
-    1.5 * np.sin(2 * np.pi * 40 * t )  + 5 * np.cos(2 * np.pi * 50 * t ) + \
-    1.5 * np.sin(2 * np.pi * 70 * t )  + 1 * np.sin(2 * np.pi * 80 * t ) + \
-    2.1 * np.cos (2 * np.pi * 100 * t ) + 2.5 * np.sin(2 * np.pi * 120 * t ) + \
-    5 * np.cos(2 * np.pi * 150 * t ) + 5 * np.sin(2 * np.pi * 180 * t )
+f = 1   * np.cos(2 * np.pi * 10 * t ) + \
+    2   * np.sin(2 * np.pi * 20 * t ) + \
+    1.5 * np.sin(2 * np.pi * 40 * t ) + \
+    5   * np.cos(2 * np.pi * 50 * t ) + \
+    1.5 * np.sin(2 * np.pi * 70 * t ) + \
+    1   * np.sin(2 * np.pi * 80 * t ) + \
+    2.1 * np.cos (2 * np.pi * 100 * t ) + \
+    2.5 * np.sin(2 * np.pi * 120 * t ) + \
+    5   * np.cos(2 * np.pi * 150 * t ) + \
+    5   * np.sin(2 * np.pi * 180 * t )
 
 
 f_clean = f
@@ -90,17 +95,17 @@ plt.legend()
 plt.sca(axs[1])
 plt.plot(freq[L], PSD[L], color = 'c', LineWidth = 1.5, label='PSD/Frequence')
 plt.axhline(thresMax, color='g', linestyle='--', LineWidth = 0.5, label='PSD threshold max')
-#plt.axhline(thresMin, color='r', linestyle='--', LineWidth = 0.5, label='PSD threshold min')
+#lt.axhline(thresMin, color='r', linestyle='--', LineWidth = 0.5, label='PSD threshold min')
 plt.xlim(0,250)#plt.xlim(L[0],L[-1])
-#plt.ylim(-300,400)
+#lt.ylim(-300,400)
 plt.yscale('log')
 plt.legend()
 
 plt.sca(axs[2])
 plt.plot(t, f_clean, color = 'k', LineWidth = 3, label='Clean')
-plt.plot(t, (f_filt-5), color = 'g', LineWidth = 1.5, label='Filtered')
+plt.plot(t, (f_filt), color = 'g', LineWidth = 1.5, label='Filtered')
 plt.xlim(0, 0.15)#plt.xlim(t[0], t[-1])
-#plt.ylim(-30, 30)
+plt.ylim(-30, 30)
 plt.legend()
 
 plt.show()
@@ -108,12 +113,12 @@ plt.show()
 #####################################################
 #Converto to sound:
     
-scaledC = np.int16(f_clean /np.max(np.abs(f_clean)) * 32767)
-write('C:\\temp\\fft\\f_clean.wav', 44100, scaledC)
-scaledF = np.int16(f_filt/np.max(np.abs(f_filt)) * 32767)
-write('C:\\temp\\fft\\f_filt.wav', 44100, scaledF)
-scaledD = np.int16(f/np.max(np.abs(f)) * 32767)
-write('C:\\temp\\fft\\f_dirty.wav', 44100, scaledD)
+#scaledC = np.int16(f_clean /np.max(np.abs(f_clean)) * 32767)
+#write('C:\\temp\\fft\\f_clean.wav', 44100, scaledC)
+#scaledF = np.int16(f_filt/np.max(np.abs(f_filt)) * 32767)
+#write('C:\\temp\\fft\\f_filt.wav', 44100, scaledF)
+#scaledD = np.int16(f/np.max(np.abs(f)) * 32767)
+#write('C:\\temp\\fft\\f_dirty.wav', 44100, scaledD)
 
 #write('C:\\temp\\f_clean.wav', 44100, f_clean)
 #write('C:\\temp\\f_filt.wav', 44100, ffilt)
